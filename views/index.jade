@@ -3,3 +3,19 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+
+  script
+    $(function(){
+      var Asset = Backbone.Model.extend({
+        initialize: function(m) { this._model = model; },
+        idAttribute: "TAG"
+      });
+
+
+    });
+
+  script(type='text/template')#post-template
+    div.span12
+      span <%= tag %>
+      span <%= hostname %>
+      span <%= status %>
