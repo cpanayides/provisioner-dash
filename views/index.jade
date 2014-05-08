@@ -3,19 +3,67 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+  div#assets
 
-  script
+  script.
     $(function(){
       var Asset = Backbone.Model.extend({
-        initialize: function(m) { this._model = model; },
-        idAttribute: "TAG"
+        idAttribute: "TAG",
+      });
+      var Assets = Backbone.Collection.extend({
+        model: Asset,
+      });
+      var AssetView = Backbone.View.extend({
+        template: _.template($('#asset-template').html()),
+        render: function(){
+          var m = this.model.attributes;
+          this.$el.html($(this.template(this.model.attributes)).addClass("asset-" + m.TAG));
+          return this;
+        }
+      });
+      var AssetsView = Backbone.View.extend({
+        el: $('#assets'),
+        initialize: function(){
+          //TODO: listen to sort to reorder, error, etc
+          this.listenTo(assets, 'add', this.addAsset);
+          this.listenTo(assets, 'remove', this.removeAsset);
+        },
+        addAsset: function(asset, coll){
+          var view = new AssetView({model: asset});
+          this.$el.append(view.render().el);
+        },
+        removeAsset: function(asset, coll){
+          console.log("remove");
+          console.log(asset);
+          $('.asset-' + asset.attributes.TAG).remove();
+        }
       });
 
+      // bootstrap in our collection, triggering events
+      var bootstrapped_assets = !{JSON.stringify(assets)};
+
+      // create collections (empty)
+      var assets = new Assets();
+
+      // create layouts and views
+      var dash = new AssetsView();
+
+      // bootstrap in our models for inital render
+      assets.add(bootstrapped_assets);
+
+      //assets.remove(assets.get('003183'));
+
+      //TODO: set up a websocket and listen for events from server for update assets instead of polling
 
     });
 
-  script(type='text/template')#post-template
-    div.span12
-      span <%= tag %>
-      span <%= hostname %>
-      span <%= status %>
+  script(type='text/template')#asset-template
+    div.span12.asset-view
+      span <%= TAG %>
+      span <%= HOSTNAME %>
+      span <%= STATUS %>
+      span <%= NODECLASS %>
+
+
+
+
