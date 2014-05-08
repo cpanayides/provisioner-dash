@@ -52,7 +52,16 @@ block content
       // bootstrap in our models for inital render
       assets.add(bootstrapped_assets);
 
-      //assets.remove(assets.get('003183'));
+
+      // demonstrate how adding/removing models works
+      setTimeout(function(){
+        console.log("removing 003183");
+        var x = assets.remove(assets.get('003183'));
+        setTimeout(function(){
+          console.log("adding 003183");
+          assets.add(x);
+        },2000);
+      },2000);
 
       // set up a websocket and listen for events from server for messages
       var primus = Primus.connect(window.location.href);
