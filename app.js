@@ -52,9 +52,13 @@ var bayeux = new faye.NodeAdapter({
 bayeux.attach(server);
 
 var fayeclient = bayeux.getClient();
+var i = 0;
 setInterval(function(){
-  fayeclient.publish('/news',123);
+  fayeclient.publish('/news',i++);
 },3000);
+fayeclient.subscribe('/aj',function(message){
+  console.log("Got message from aj! " + message);
+});
 
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
