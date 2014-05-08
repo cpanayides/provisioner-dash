@@ -8,7 +8,7 @@ var routes = require('./routes');
 var http = require('http');
 var path = require('path');
 var assets_api = require('./routes/api/assets');
-var Primus = require('primus');
+var Primus = require('primus.io');
 
 var app = express();
 
@@ -38,7 +38,20 @@ var server = http.createServer(app);
 var primus = Primus(server,{transformer: 'engine.io'})
 .on('connection',function(spark){
   console.log("connection");
-  spark.write("hello");
+  spark.send("hello");
+  spark.on('data',function(d){
+    console.log("got generic data: " + d);
+  });
+  spark.on('hi', function(m){
+    console.log("got hi, sending ping in 1s");
+    setTimeout(function(){
+      spark.send("ping","wake up");
+    },1000);
+  });
+  spark.on('pong',function(){
+    console.log("got pong");
+  });
+  /*
   spark.on('data',function(d){
     console.log("got client data: " + d);
     if (d === "pong"){
@@ -53,6 +66,7 @@ var primus = Primus(server,{transformer: 'engine.io'})
       },1000);
     }
   });
+  */
 })
 .on('disconnect',function(spark){
   console.log("got disconnect");

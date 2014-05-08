@@ -12,8 +12,7 @@
     "engine.io": "^1.1.0",
     "express": "3.x",
     "jade": "0.x",
-    "primus": "^2.2.1",
-    "querystring": "",
+    "primus.io": "^3.1.1",
     "underscore": "1.x"
   }
 }

@@ -5,7 +5,7 @@ block content
   p Welcome to #{title}
   div#assets
   
-  script(src='/primus/primus.js')
+  script(src='/primus/primus.io.js')
   script.
     $(function(){
       var Asset = Backbone.Model.extend({
@@ -56,19 +56,17 @@ block content
 
       // set up a websocket and listen for events from server for messages
       var primus = Primus.connect(window.location.href);
-      primus.on('data',function(d){
+      primus.on('open',function(){
         //TODO case switch on message type. needs send semantics? (message, payload)
-        console.log("got " + d);
-
-        if (d === "hello"){
-          console.log("sending hi");
-          primus.write("hi");
-        } else if (d === "ping"){
-          setTimeout(function(){
-            console.log("sending pong");
-            primus.write("pong");
-          },1000);
-        }
+        console.log("sending hi");
+        primus.send("hi");
+      });
+      primus.on("hello",function(m){
+        console.log("got hello from server");
+      });
+      primus.on("ping",function(){
+        console.log("got ping, sending pong");
+        primus.send("pong");
       });
 
     });
