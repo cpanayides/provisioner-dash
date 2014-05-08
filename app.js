@@ -32,6 +32,7 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/api/assets', assets_api.assets);
 
+//TODO: remove primus and replace with faye for real pubsub
 // web server from the express instance
 var server = http.createServer(app);
 // create primus instance from webserver
