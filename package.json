@@ -9,10 +9,9 @@
   "author": "Gabe Conradi <gabe@tumblr.com>",
   "license": "Apache 2.0",
   "dependencies": {
-    "engine.io": "^1.1.0",
     "express": "3.x",
+    "faye": "^1.0.1",
     "jade": "0.x",
-    "primus.io": "^3.1.1",
     "underscore": "1.x"
   }
 }

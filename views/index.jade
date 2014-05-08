@@ -8,7 +8,7 @@ block content
     span.count 0
     span assets provisioning
   
-  script(src='/primus/primus.io.js')
+  script(src='/faye/client.js')
   script.
     $(function(){
       var Asset = Backbone.Model.extend({
@@ -49,7 +49,6 @@ block content
           this.listenTo(assets, 'all', this.render);
         },
         render: function(){
-          console.log(this.$el.find('.count'));
           this.$el.find('span.count').html(assets.length);
         }
       });
@@ -79,19 +78,13 @@ block content
       },2000);
 
       // set up a websocket and listen for events from server for messages
-      var primus = Primus.connect(window.location.href);
-      primus.on('open',function(){
-        //TODO case switch on message type. needs send semantics? (message, payload)
-        console.log("sending hi");
-        primus.send("hi");
+      var faye = new Faye.Client('/faye');
+      console.log(faye);
+      faye.subscribe('/news',function(m){
+        console.log("i got a news message: " + m);
       });
-      primus.on("hello",function(m){
-        console.log("got hello from server");
-      });
-      primus.on("ping",function(){
-        console.log("got ping, sending pong");
-        primus.send("pong");
-      });
+
+
 
     });
 

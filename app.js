@@ -8,7 +8,7 @@ var routes = require('./routes');
 var http = require('http');
 var path = require('path');
 var assets_api = require('./routes/api/assets');
-var Primus = require('primus.io');
+var faye = require('faye');
 
 var app = express();
 
@@ -32,46 +32,16 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/api/assets', assets_api.assets);
 
-//TODO: remove primus and replace with faye for real pubsub
 // web server from the express instance
 var server = http.createServer(app);
-// create primus instance from webserver
-var primus = Primus(server,{transformer: 'engine.io'})
-.on('connection',function(spark){
-  console.log("connection");
-  spark.send("hello");
-  spark.on('data',function(d){
-    console.log("got generic data: " + d);
-  });
-  spark.on('hi', function(m){
-    console.log("got hi, sending ping in 1s");
-    setTimeout(function(){
-      spark.send("ping","wake up");
-    },1000);
-  });
-  spark.on('pong',function(){
-    console.log("got pong");
-  });
-  /*
-  spark.on('data',function(d){
-    console.log("got client data: " + d);
-    if (d === "pong"){
-      console.log("pong, pinging in 1s");
-      setTimeout(function(){
-        spark.write("ping");
-      },1000);
-    } else if (d === "hi") {
-      console.log("client said hi, starting ping");
-      setTimeout(function(){
-        spark.write("ping");
-      },1000);
-    }
-  });
-  */
-})
-.on('disconnect',function(spark){
-  console.log("got disconnect");
-});
+// create faye instance from webserver
+var bayeux = new faye.NodeAdapter({mount: '/faye'});
+bayeux.attach(server);
+
+var fayeclient = bayeux.getClient();
+setInterval(function(){
+  fayeclient.publish('/news',123);
+},3000);
 
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
