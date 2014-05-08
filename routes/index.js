@@ -8,3 +8,14 @@ exports.index = function(req, res){
     res.write("Unable to query collins: " + err.message);
   });
 };
+
+exports.firehose = function(faye){
+  return function(req, res){
+    var tag = req.params.tag;
+    var body = req.body;
+    console.log("got a firehose post: " + tag);
+    console.log(body);
+    faye.publish("/firehose/new",body);
+    res.send(202);
+  };
+};

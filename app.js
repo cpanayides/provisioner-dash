@@ -34,9 +34,6 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.get('/api/assets', assets_api.assets);
-
 // web server from the express instance
 var server = http.createServer(app);
 // create faye instance from webserver
@@ -59,6 +56,14 @@ setInterval(function(){
 fayeclient.subscribe('/aj',function(message){
   console.log("Got message from aj! " + message);
 });
+fayeclient.subscribe('/firehose/*',function(message){
+  console.log("firehose event: " + message);
+});
+
+/** set up routes **/
+app.get('/', routes.index);
+app.post('/firehose/:tag', routes.firehose(fayeclient));
+app.get('/api/assets', assets_api.assets);
 
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

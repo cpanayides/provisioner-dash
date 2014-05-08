@@ -105,6 +105,9 @@ block content
       faye.subscribe('/news',function(m){
         console.log("i got a news message: " + m);
       });
+      faye.subscribe('/firehose/*',function(m){
+        console.log("firehose event: " + m);
+      });
       faye.subscribe('/asset/add',function(m){
         console.log("asset added: " + m);
         assets.add(new Asset(m));
