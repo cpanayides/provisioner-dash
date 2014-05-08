@@ -3,14 +3,19 @@
  * Module dependencies.
  */
 
-var express = require('express');
-var routes = require('./routes');
-var http = require('http');
-var path = require('path');
-var assets_api = require('./routes/api/assets');
-var faye = require('faye');
+var express = require('express'),
+    routes = require('./routes'),
+    http = require('http'),
+    path = require('path'),
+    assets_api = require('./routes/api/assets'),
+    faye = require('faye'),
+    redis = require('faye-redis'),
+    fs = require('fs'),
+    _ = require('underscore'),
+    app = express();
 
-var app = express();
+//read in config files for redis
+var app_conf = JSON.parse(fs.readFileSync('./conf/app.json'));
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -35,7 +40,15 @@ app.get('/api/assets', assets_api.assets);
 // web server from the express instance
 var server = http.createServer(app);
 // create faye instance from webserver
-var bayeux = new faye.NodeAdapter({mount: '/faye'});
+var bayeux = new faye.NodeAdapter({
+  mount: '/faye',
+  engine: {
+    type: redis,
+    host: app_conf.redis.host || "localhost",
+    port: app_conf.redis.port || 6379,
+    namespace: "faye"
+  }
+});
 bayeux.attach(server);
 
 var fayeclient = bayeux.getClient();
