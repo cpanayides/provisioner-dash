@@ -9,9 +9,11 @@
   "author": "Gabe Conradi <gabe@tumblr.com>",
   "license": "Apache 2.0",
   "dependencies": {
+    "engine.io": "^1.1.0",
     "express": "3.x",
     "jade": "0.x",
-    "underscore": "1.x",
-    "querystring": ""
+    "primus": "^2.2.1",
+    "querystring": "",
+    "underscore": "1.x"
   }
 }

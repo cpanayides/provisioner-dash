@@ -4,7 +4,8 @@ block content
   h1= title
   p Welcome to #{title}
   div#assets
-
+  
+  script(src='/primus/primus.js')
   script.
     $(function(){
       var Asset = Backbone.Model.extend({
@@ -53,7 +54,22 @@ block content
 
       //assets.remove(assets.get('003183'));
 
-      //TODO: set up a websocket and listen for events from server for update assets instead of polling
+      // set up a websocket and listen for events from server for messages
+      var primus = Primus.connect(window.location.href);
+      primus.on('data',function(d){
+        //TODO case switch on message type. needs send semantics? (message, payload)
+        console.log("got " + d);
+
+        if (d === "hello"){
+          console.log("sending hi");
+          primus.write("hi");
+        } else if (d === "ping"){
+          setTimeout(function(){
+            console.log("sending pong");
+            primus.write("pong");
+          },1000);
+        }
+      });
 
     });
 
