@@ -7,7 +7,7 @@ block content
   div#num-provisioning
     span.count 0
     span assets provisioning
-  
+
   script(src='/faye/client.js')
   script.
     $(function(){
@@ -17,7 +17,7 @@ block content
       var Assets = Backbone.Collection.extend({
         model: Asset,
       });
-      var AssetView = Backbone.View.extend({
+      var ProvisioningAssetView = Backbone.View.extend({
         template: _.template($('#asset-template').html()),
         render: function(){
           var m = this.model.attributes;
@@ -25,7 +25,7 @@ block content
           return this;
         }
       });
-      var AssetsView = Backbone.View.extend({
+      var ProvisioningAssetsView = Backbone.View.extend({
         el: $('#assets'),
         initialize: function(){
           //TODO: listen to sort to reorder, error, etc
@@ -33,7 +33,7 @@ block content
           this.listenTo(assets, 'remove', this.removeAsset);
         },
         addAsset: function(asset, coll){
-          var view = new AssetView({model: asset});
+          var view = new ProvisioningAssetView({model: asset});
           this.$el.append(view.render().el);
         },
         removeAsset: function(asset, coll){
@@ -60,7 +60,7 @@ block content
       var assets = new Assets();
 
       // create layouts and views
-      var dash = new AssetsView();
+      var dash = new ProvisioningAssetsView();
       var provision_count = new NumProvisioningHostsView();
 
       // bootstrap in our models for inital render
@@ -79,7 +79,6 @@ block content
 
       // set up a websocket and listen for events from server for messages
       var faye = new Faye.Client('/faye');
-      console.log(faye);
       faye.subscribe('/news',function(m){
         console.log("i got a news message: " + m);
       });
@@ -91,9 +90,6 @@ block content
         console.log("asset removed: " + m.TAG);
         assets.remove(assets.get(m.TAG));
       });
-
-
-
 
     });
 
