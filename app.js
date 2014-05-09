@@ -62,7 +62,8 @@ fayeclient.subscribe('/firehose/*',function(message){
 
 /** set up routes **/
 app.get('/', routes.index);
-app.post('/firehose/:tag', routes.firehose(fayeclient));
+app.post('/firehose/asset/:tag', routes.firehose(fayeclient,'asset'));
+app.post('/firehose/log/:tag', routes.firehose(fayeclient,'log'));
 app.get('/api/assets', assets_api.assets);
 
 server.listen(app.get('port'), function(){

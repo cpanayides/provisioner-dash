@@ -9,13 +9,20 @@ exports.index = function(req, res){
   });
 };
 
-exports.firehose = function(faye){
+exports.firehose = function(faye, type){
   return function(req, res){
     var tag = req.params.tag;
     var body = req.body;
-    console.log("got a firehose post: " + tag);
+    console.log("got a firehose " + type + " post: " + tag);
     console.log(body);
-    faye.publish("/firehose/new",body);
+    if (type === 'asset'){
+      //TODO: query collins for this asset
+      var asset = {tag: tag};
+      faye.publish("/asset/update",asset);
+    } else {
+      console.log("Unknown firehose message type, not publishing anything: " + type);
+    }
+    // unhandled message type wont publish anything
     res.send(202);
   };
 };
