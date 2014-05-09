@@ -49,10 +49,12 @@ var bayeux = new faye.NodeAdapter({
 bayeux.attach(server);
 
 var fayeclient = bayeux.getClient();
+/*
 var i = 0;
 setInterval(function(){
   fayeclient.publish('/news',i++);
 },3000);
+*/
 fayeclient.subscribe('/aj',function(message){
   console.log("Got message from aj! " + message);
 });

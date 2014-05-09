@@ -129,9 +129,13 @@ block content
 
       // set up a websocket and listen for events from server for messages
       var faye = new Faye.Client('/faye');
+
+      /*
       faye.subscribe('/news',function(m){
         console.log("i got a news message: " + m);
       });
+      */
+
       faye.subscribe('/asset/update',function(a){
         // this will just add/update any new assets into the collection. if it is in a status
         // we dont care about, the views will filter those out, so no worries
