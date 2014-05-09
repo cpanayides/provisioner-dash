@@ -5,14 +5,14 @@ block content
   p Welcome to #{title}
   div#provisioning-assets
   div#num-provisioning
-    span.provisioning-count 0
-    span assets provisioning
-    span.allocating-count 0
-    span assets allocating
-    span.unallocated-count 0
-    span assets unallocated
-    span Hardware type:
-    span.hardware-type all
+    h1.provisioning-count 0
+    h4 assets provisioning
+    h1.allocating-count 0
+    h4 assets allocating
+    h1.unallocated-count 0
+    h4 assets unallocated
+    h3 Hardware type: 
+      span.hardware-type all
 
   script(src='/faye/client.js')
   script.
