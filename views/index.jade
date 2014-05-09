@@ -32,17 +32,20 @@ block content
         }
       });
       var ProvisioningAssetsView = Backbone.View.extend({
+        subviews: {},
         statuses: ["Provisioning","Provisioned"],
         el: $('#provisioning-assets'),
         initialize: function(){
           //TODO: listen to sort to reorder, error, etc
           this.listenTo(assets, 'add', this.addAsset);
           this.listenTo(assets, 'remove', this.removeAsset);
+          this.listenTo(assets, 'change', this.updateAsset);
         },
         addAsset: function(asset, coll){
           if (_.contains(this.statuses,asset.get('STATUS'))){
             console.log("add " + asset.get('TAG'));
             var view = new ProvisioningAssetView({model: asset});
+            this.subviews[asset.get('TAG')] = view;
             this.$el.append(view.render().el);
           }
         },
@@ -50,6 +53,16 @@ block content
           if (_.contains(this.statuses,asset.get('STATUS'))){
             console.log("remove " + asset.get('TAG'));
             $('.asset-' + asset.attributes.TAG).remove();
+          }
+        },
+        updateAsset: function(asset, coll){
+          console.log("collection updated with: " + asset.get('TAG'));
+          var view = this.subviews[asset.get('TAG')];
+          if (view) {
+            console.log("rerendering ProvisioningAssetView for " + asset.get('TAG') + " due to attr update");
+            view.render();
+          } else {
+            console.log("no ProvisioningAssetView to update for " + asset.get('TAG'));
           }
         }
       });

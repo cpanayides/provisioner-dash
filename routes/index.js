@@ -16,9 +16,11 @@ exports.firehose = function(faye, type){
     console.log("got a firehose " + type + " post: " + tag);
     console.log(body);
     if (type === 'asset'){
-      //TODO: query collins for this asset
-      var asset = {tag: tag};
-      faye.publish("/asset/update",asset);
+      collins.asset(tag, function(asset){
+        faye.publish("/asset/update",asset);
+      },function(e){
+        console.error("Unable to get collins asset: " + e.message);
+      });
     } else {
       console.log("Unknown firehose message type, not publishing anything: " + type);
     }
