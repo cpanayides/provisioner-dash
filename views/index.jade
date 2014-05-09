@@ -89,13 +89,13 @@ block content
           //this.listenTo(hardware_filter, 'all', this.render);
         },
         render: function(){
-          this.$el.find('span.provisioning-count').html(assets.filter(function(a){
+          this.$el.find('.provisioning-count').html(assets.filter(function(a){
             return a.get('STATUS') === "Provisioning";
           }).length);
-          this.$el.find('span.allocating-count').html(assets.filter(function(a){
+          this.$el.find('.allocating-count').html(assets.filter(function(a){
             return a.get('STATUS') === "Provisioned";
           }).length);
-          this.$el.find('span.unallocated-count').html(assets.filter(function(a){
+          this.$el.find('.unallocated-count').html(assets.filter(function(a){
             return a.get('STATUS') === "Unallocated";
           }).length);
           //TODO: implement me
