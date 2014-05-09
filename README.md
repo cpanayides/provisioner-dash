@@ -11,3 +11,9 @@ We want to be informed whenever an asset:
 * !isProvisioned -> isProvisioned (now waiting to allocate)
 * !isAllocated -> isAllocated (machine was just allocated)
 * log events on any machine
+
+## TODO
+
+* Implement log streaming per asset
+* import workflow for provisoining + allocation
+* make display look better
