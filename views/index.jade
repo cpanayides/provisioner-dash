@@ -53,16 +53,30 @@ block content
           if (_.contains(this.statuses,asset.get('STATUS'))){
             console.log("remove " + asset.get('TAG'));
             $('.asset-' + asset.attributes.TAG).remove();
+            delete this.subviews[asset.get('TAG')];
           }
         },
         updateAsset: function(asset, coll){
           console.log("collection updated with: " + asset.get('TAG'));
           var view = this.subviews[asset.get('TAG')];
-          if (view) {
-            console.log("rerendering ProvisioningAssetView for " + asset.get('TAG') + " due to attr update");
-            view.render();
+          if (_.contains(this.statuses,asset.get('STATUS'))){
+            if (view) {
+              // asset updated and we were already rendering him. just rerender
+              console.log("rerendering ProvisioningAssetView for " + asset.get('TAG') + " due to attr update");
+              view.render();
+            } else {
+              //create a new view, this asset just got put into a status we care about
+              this.addAsset(asset,coll);
+            }
           } else {
-            console.log("no ProvisioningAssetView to update for " + asset.get('TAG'));
+            if (view) {
+              // asset transitioned from a status we care about to one we dont. delete the view
+              console.log("" + asset.get('TAG') + " is now " + asset.get('STATUS') + ", removing from view");
+              view.$el.remove();
+              delete this.subviews[asset.get('TAG')];
+            } else {
+              console.log("no ProvisioningAssetView to delete for " + asset.get('TAG'));
+            }
           }
         }
       });
