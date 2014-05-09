@@ -14,7 +14,6 @@ exports.firehose = function(faye, type){
     var tag = req.params.tag;
     var body = req.body;
     console.log("got a firehose " + type + " post: " + tag);
-    console.log(body);
     if (type === 'asset'){
       collins.asset(tag, function(asset){
         faye.publish("/asset/update",asset);

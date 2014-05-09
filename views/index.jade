@@ -3,18 +3,23 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
-  div#provisioning-assets
-  div#num-provisioning
-    h1.provisioning-count 0
-    h4 assets provisioning
-    h1.allocating-count 0
-    h4 assets allocating
-    h1.unallocated-count 0
-    h4 assets unallocated
-    h3 Hardware type: 
-      span.hardware-type all
+  div.pure-g
+    div.pure-u-3-5
+      div#provisioning-assets
+    div.pure-u-2-5
+      div.l-box
+        div#num-provisioning
+          h1.provisioning-count 0
+          h4 assets provisioning
+          h1.allocating-count 0
+          h4 assets allocating
+          h1.unallocated-count 0
+          h4 assets unallocated
+          h3 Hardware type: 
+            span.hardware-type all
 
   script(src='/faye/client.js')
+  script(src='/javascripts/workflow.js')
   script.
     $(function(){
       var Asset = Backbone.Model.extend({
@@ -27,6 +32,8 @@ block content
         template: _.template($('#asset-template').html()),
         render: function(){
           var m = this.model.attributes;
+          console.log("rendering asset");
+          console.log(m);
           this.$el.html($(this.template(this.model.attributes)).addClass("asset-" + this.model.get('TAG')));
           return this;
         }
@@ -116,8 +123,8 @@ block content
       // bootstrap in our models for inital render
       assets.add(bootstrapped_assets);
 
-
       // demonstrate how adding/removing models works
+      /*
       setTimeout(function(){
         console.log("removing tumblrtag301");
         var x = assets.remove(assets.get('tumblrtag301'));
@@ -126,6 +133,7 @@ block content
           assets.add(x);
         },2000);
       },2000);
+      */
 
       // set up a websocket and listen for events from server for messages
       var faye = new Faye.Client('/faye');
@@ -146,11 +154,26 @@ block content
     });
 
   script(type='text/template')#asset-template
-    div.span12.asset-view
-      span <%= this.model.get('TAG') %>
-      span <%= this.model.get('STATUS') %>
-      span <%= this.model.get('HOSTNAME') %>
-      span <%= this.model.get('NODECLASS') %>
+    <% var progress = provisioningProgress(this.model); %>
+    div.l-box#asset-view
+      span State: <%= progress.name %> 
+      | <a href="http://collins.ewr01.tumblr.net/asset/<%= this.model.get('TAG') %>"><%= this.model.get('TAG') %></a>
+      span <%= this.model.get('STATUS') %> 
+      span <%= this.model.get('HOSTNAME') %> 
+      span <%= this.model.get('NODECLASS') %> 
+      div.pure-g-r
+       div.pure-u-1-12
+       div.pure-u-1-12
+       div.pure-u-1-12
+       div.pure-u-1-12
+       div.pure-u-1-12
+       div.pure-u-1-12
+       div.pure-u-1-12
+       div.pure-u-1-12
+       div.pure-u-1-12
+       div.pure-u-1-12
+       div.pure-u-1-12
+       div.pure-u-1-12
 
 
 
