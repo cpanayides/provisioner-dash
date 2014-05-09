@@ -3,7 +3,7 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
-  div.pure-g
+  div.pure-g(background-color='grey')
     div.pure-u-3-5
       div#provisioning-assets
     div.pure-u-2-5
@@ -158,9 +158,23 @@ block content
     div.l-box#asset-view
       span State: <%= progress.name %> 
       | <a href="http://collins.ewr01.tumblr.net/asset/<%= this.model.get('TAG') %>"><%= this.model.get('TAG') %></a>
-      span <%= this.model.get('STATUS') %> 
-      span <%= this.model.get('HOSTNAME') %> 
-      span <%= this.model.get('NODECLASS') %> 
+      p <%= this.model.get('STATUS') %> 
+      p <%= this.model.get('HOSTNAME') %> 
+      p <%= this.model.get('NODECLASS') %>
+      <% if(typeof progress.index == 'undefined') { %>
+      <% var indexer = 1; %>
+      svg(width='50', height='50')
+        circle(cx='25', cy='25', r='20', stroke='blue', stroke-width='2', fill='yellow')
+      <% } else { %>
+      <% var indexer = progress.index; %>
+      <% for (var i = 1; i < progress.index; i++) { %>
+      svg(width='50', height='50')
+        circle(cx='25', cy='25', r='20', stroke='blue', stroke-width='2', fill='yellow')
+      <%  } } %>
+      <% for (var i = 0; i < 10-indexer; i++) { %>
+      svg(width='50', height='50')
+        circle(cx='25', cy='25', r='20', stroke='blue', stroke-width='2', fill='none')
+      <%  } %>
       div.pure-g-r
        div.pure-u-1-12
        div.pure-u-1-12
